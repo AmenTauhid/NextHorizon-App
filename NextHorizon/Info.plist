@@ -12,6 +12,16 @@
 				<string>auth0.dwLcqmfmlbzYplK9SkqyyFZYsWg5RGSd</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>OmarA.sheridan.NextHorizon</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nexthorizon</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
