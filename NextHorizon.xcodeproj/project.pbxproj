@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DC7271292D3C414500E3D582 /* Auth0 in Frameworks */ = {isa = PBXBuildFile; productRef = DC7271282D3C414500E3D582 /* Auth0 */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		17BF04D02D3C2D5900518DFD /* NextHorizon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NextHorizon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DC7271312D3C420100E3D582 /* Exceptions for "NextHorizon" folder in "NextHorizon" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 17BF04CF2D3C2D5900518DFD /* NextHorizon */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17BF04D22D3C2D5900518DFD /* NextHorizon */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DC7271312D3C420100E3D582 /* Exceptions for "NextHorizon" folder in "NextHorizon" target */,
+			);
 			path = NextHorizon;
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC7271292D3C414500E3D582 /* Auth0 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = NextHorizon;
 			packageProductDependencies = (
+				DC7271282D3C414500E3D582 /* Auth0 */,
 			);
 			productName = NextHorizon;
 			productReference = 17BF04D02D3C2D5900518DFD /* NextHorizon.app */;
@@ -94,6 +113,9 @@
 			);
 			mainGroup = 17BF04C72D3C2D5900518DFD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DC7271272D3C414500E3D582 /* XCRemoteSwiftPackageReference "Auth0" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 17BF04D12D3C2D5900518DFD /* Products */;
 			projectDirPath = "";
@@ -252,9 +274,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NextHorizon/Preview Content\"";
-				DEVELOPMENT_TEAM = P8UJ79LC44;
+				DEVELOPMENT_TEAM = NW93ULW7FN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NextHorizon/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -265,7 +288,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = amen.sheridan.NextHorizon;
+				PRODUCT_BUNDLE_IDENTIFIER = OmarA.sheridan.NextHorizon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -281,9 +304,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NextHorizon/Preview Content\"";
-				DEVELOPMENT_TEAM = P8UJ79LC44;
+				DEVELOPMENT_TEAM = NW93ULW7FN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NextHorizon/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -294,7 +318,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = amen.sheridan.NextHorizon;
+				PRODUCT_BUNDLE_IDENTIFIER = OmarA.sheridan.NextHorizon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -324,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC7271272D3C414500E3D582 /* XCRemoteSwiftPackageReference "Auth0" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/Auth0.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DC7271282D3C414500E3D582 /* Auth0 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC7271272D3C414500E3D582 /* XCRemoteSwiftPackageReference "Auth0" */;
+			productName = Auth0;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 17BF04C82D3C2D5900518DFD /* Project object */;
 }
