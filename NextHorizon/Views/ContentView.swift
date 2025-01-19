@@ -2,10 +2,7 @@
 //  ContentView.swift
 //  NextHorizon
 //
-//  Created by Ayman Tauhid on 2025-01-18.
-//
 
-// ContentView.swift
 import SwiftUI
 import Auth0
 
@@ -18,26 +15,25 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             if let user = user {
-                // Main app interface with TabView
                 TabView(selection: $selectedTab) {
                     HomeView()
                         .tabItem {
                             Image(systemName: "house.fill")
-                            Text("Home")
+                            Text("My Path")
                         }
                         .tag(0)
                     
                     JobBoardView()
                         .tabItem {
-                            Image(systemName: "briefcase.fill")
-                            Text("Jobs")
+                            Image(systemName: "doc.text.magnifyingglass")
+                            Text("Job Search")
                         }
                         .tag(1)
                     
                     CareerBoardView()
                         .tabItem {
-                            Image(systemName: "ladder")
-                            Text("Career")
+                            Image(systemName: "briefcase.fill")
+                            Text("Career Explorer")
                         }
                         .tag(2)
                     
@@ -50,8 +46,7 @@ struct ContentView: View {
                 }
                 .accentColor(.blue)
             } else {
-                // Login view
-                LoginView(login: login)
+                LandingView(login: login)
             }
         }
         .alert(isPresented: $showError) {
