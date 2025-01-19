@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct HomeView: View {
-    // Hardcoded data for demonstration purposes
     private let userName = "Omar"
     private let currentSchooling = "High School Junior"
     private let recommendedJobs = [
@@ -47,7 +46,6 @@ struct HomeView: View {
 
                         Text("Discover your future career and how to get there.")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
 
                         Divider()
 
@@ -55,7 +53,7 @@ struct HomeView: View {
                         Text("Recommended Careers")
                             .font(.headline)
 
-                        HStack(spacing: 15) {
+                        HStack(spacing: 0) {
                             ForEach(recommendedJobs, id: \.self) { job in
                                 VStack {
                                     Text(job)
@@ -65,31 +63,14 @@ struct HomeView: View {
                                         .foregroundColor(.gray)
                                 }
                                 .padding()
-                                .background(selectedJob == job ? Color.blue.opacity(0.3) : Color.white)
+                                .background(selectedJob == job ? Color.yellow : Color.yellow.opacity(0.3))
                                 .cornerRadius(10)
                                 .shadow(radius: 2)
                                 .onTapGesture {
                                     selectedJob = job
                                 }
+                                .frame(maxWidth: .infinity)
                             }
-                        }
-
-                        Divider()
-
-                        // Current Schooling Section
-                        Text("Current Schooling")
-                            .font(.headline)
-
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("You are currently enrolled as:")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                            Text(currentSchooling)
-                                .font(.system(size: 16))
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(10)
-                                .shadow(radius: 2)
                         }
 
                         Divider()
@@ -134,14 +115,38 @@ struct HomeView: View {
 
                         Divider()
 
+                        // Current Schooling Section
+                        Text("Current Schooling")
+                            .font(.headline)
+
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("You are currently enrolled as:")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            Text(currentSchooling)
+                                .font(.system(size: 16))
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 2)
+                        }
+                        
+                        Divider()
+
                         // Features Section
                         Text("App Features")
                             .font(.headline)
 
                         VStack(alignment: .leading, spacing: 10) {
-                            FeatureRow(icon: "house.fill", title: "Homepage", description: "Access all your career and schooling information at a glance. Get personalized schooling recommendations based on your chosen career path.")
-                            FeatureRow(icon: "message.fill", title: "Career Advisor", description: "Chat with our bot to learn about and explore career options, understand your interests, and plan your future.")
-                            FeatureRow(icon: "briefcase.fill", title: "Job Board", description: "Find the most recent and relevant job postings tailored to your preferences, including details about salary, location, and required qualifications.")
+                            FeatureRow(icon: "house.fill",
+                                       title: "Homepage",
+                                       description: "Access all your career and schooling information at a glance. Get personalized schooling recommendations based on your chosen career path.")
+                            FeatureRow(icon: "message.fill",
+                                       title: "Career Advisor",
+                                       description: "Chat with our bot to learn about and explore career options, understand your interests, and plan your future.")
+                            FeatureRow(icon: "briefcase.fill",
+                                       title: "Job Board",
+                                       description: "Find the most recent and relevant job postings tailored to your preferences, including details about salary, location, and required qualifications.")
                         }
                     }
                     .padding()
@@ -161,7 +166,7 @@ struct FeatureRow: View {
             Image(systemName: icon)
                 .resizable()
                 .frame(width: 30, height: 30)
-                .foregroundColor(.blue)
+                .foregroundColor(Color(hex: "083221"))
                 .padding(.trailing, 10)
 
             VStack(alignment: .leading, spacing: 5) {
