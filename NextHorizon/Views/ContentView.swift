@@ -1,15 +1,5 @@
-//
-//  ContentView.swift
-//  NextHorizon
-//
-//  Created by Ayman Tauhid on 2025-01-18.
-//
-
-// ContentView.swift
 import SwiftUI
 import Auth0
-
-
 
 struct ContentView: View {
     @State private var user: User?
@@ -27,21 +17,21 @@ struct ContentView: View {
                     HomeView()
                         .tabItem {
                             Image(systemName: "house.fill")
-                            TranslatableText(text: "Home")
+                            TranslatableText(text: "My Path")
                         }
                         .tag(0)
                     
                     JobBoardView()
                         .tabItem {
-                            Image(systemName: "briefcase.fill")
-                            TranslatableText(text: "Jobs")
+                            Image(systemName: "doc.text.magnifyingglass")
+                            TranslatableText(text: "Job Search")
                         }
                         .tag(1)
                     
                     CareerBoardView()
                         .tabItem {
-                            Image(systemName: "ladder")
-                            TranslatableText(text: "Career")
+                            Image(systemName: "briefcase.fill")
+                            TranslatableText(text: "Career Explorer")
                         }
                         .tag(2)
                     
@@ -54,7 +44,7 @@ struct ContentView: View {
                 }
                 .accentColor(.blue)
             } else {
-                LoginView(login: login)
+                LandingView(login: login)
             }
         }
         .alert(isPresented: $showError) {
