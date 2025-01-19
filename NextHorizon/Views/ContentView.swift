@@ -63,8 +63,7 @@ struct ContentView: View {
         Image(systemName: icon)
             .resizable()
             .scaledToFit()
-            .frame(width: 40, height: 40)
-            .padding()
+            .frame(width: 25, height: 25)
             .foregroundColor(selectedTab == tag ? .white : .gray)
             .font(selectedTab == tag ? .system(size: 40, weight: .bold) : .system(size: 40))
             .onTapGesture {
