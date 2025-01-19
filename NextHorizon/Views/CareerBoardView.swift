@@ -10,7 +10,7 @@ struct CareerBoardView: View {
     @EnvironmentObject private var translationManager: TranslationManager
     @State private var translatedTitle: String = "Career Advisor"
     @StateObject private var viewModel = ChatViewModel()
-
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -20,6 +20,7 @@ struct CareerBoardView: View {
                     endPoint: .bottom
                 )
                 .edgesIgnoringSafeArea(.all)
+                
                 VStack {
                     ScrollView {
                         LazyVStack(spacing: 10) {
@@ -29,20 +30,21 @@ struct CareerBoardView: View {
                             }
                         }
                     }
+                    
                     HStack {
-                        TextField("Enter your message", text: $viewModel.newMessageText)
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(10)
+                        TextField("Type your message", text: $viewModel.newMessageText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
+                        
                         Button(action: {
-                            viewModel.sendMessage()
+                            viewModel.sendMessage(translationManager: translationManager)
                         }) {
                             Image(systemName: "paperplane.fill")
-                                .font(.title2)
+                                .foregroundColor(.blue)
                         }
                         .padding(.trailing)
                     }
-                    .padding(.bottom)
+                    .padding(.vertical)
                 }
                 .navigationBarTitle(translatedTitle)
                 .onAppear {
@@ -53,8 +55,10 @@ struct CareerBoardView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("New Chat") {
+                        Button(action: {
                             viewModel.clearChat()
+                        }) {
+                            Text("New Chat")
                         }
                     }
                 }
@@ -75,42 +79,49 @@ struct Message: Identifiable {
     let text: String
     let isUser: Bool
 }
-
 class ChatViewModel: ObservableObject {
     @Published var messages: [Message] = []
     @Published var newMessageText: String = ""
     
     private let apiService = APIService()
+    private let welcomeMessage = "Hi there! I'm your career advisor. I'm here to help you explore career options, understand your interests, and plan your future. What's on your mind today?"
+    
     init() {
-        messages.append(Message(text: "Hi there! I'm your career advisor. I'm here to help you explore career options, understand your interests, and plan your future. What's on your mind today?", isUser: false))
+        messages.append(Message(text: welcomeMessage, isUser: false))
     }
     
-    func sendMessage() {
+    func sendMessage(translationManager: TranslationManager) {
         let userMessage = Message(text: newMessageText, isUser: true)
         messages.append(userMessage)
         newMessageText = ""
         
-        apiService.sendMessageToFastAPI(message: userMessage.text) { result in
+        apiService.sendMessageToFastAPI(
+            message: userMessage.text,
+            translationManager: translationManager
+        ) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
-                    self.messages.append(Message(text: response, isUser: false))
+                    self?.messages.append(Message(text: response, isUser: false))
                 case .failure(let error):
                     print("Error: \(error.localizedDescription)")
-                    
+                    // Optionally show error message to user
                 }
             }
         }
     }
     
     func clearChat() {
-           messages = [Message(text: "Hi there! I'm your career advisor. I'm here to help you explore career options, understand your interests, and plan your future. What's on your mind today?", isUser: false)]
-       }
+        messages = [Message(text: welcomeMessage, isUser: false)]
+        apiService.clearTranslations()
+    }
 }
 
 struct MessageView: View {
     let message: Message
-    @State private var formattedText: String = ""
+    @EnvironmentObject private var translationManager: TranslationManager
+    @State private var translatedText: String = ""
+    
     var body: some View {
         HStack {
             if message.isUser {
@@ -122,7 +133,7 @@ struct MessageView: View {
                     .cornerRadius(15)
             } else {
                 ScrollView {
-                    Text(formattedText)
+                    Text(translatedText)
                         .padding()
                         .background(Color.gray.opacity(0.4))
                         .cornerRadius(15)
@@ -131,14 +142,28 @@ struct MessageView: View {
             }
         }
         .onAppear {
-            formattedText = formatResponse(message.text)
+            translateMessage()
+        }
+        .onChange(of: translationManager.currentLanguage) { _ in
+            translateMessage()
         }
     }
-    func formatResponse(_ text: String) -> String {
-        var formattedText = text.replacingOccurrences(of: "|n", with: "\n")
-                                .replacingOccurrences(of: "In-", with: "\n- ")
-                                .replacingOccurrences(of: "nlf", with: "\n")
-                                .replacingOccurrences(of: "In", with: "\n")
-        return formattedText
+    
+    private func translateMessage() {
+        if !message.isUser {
+            Task {
+                let formattedText = formatResponse(message.text)
+                translatedText = await translationManager.translate(formattedText)
+            }
+        } else {
+            translatedText = message.text
+        }
+    }
+    
+    private func formatResponse(_ text: String) -> String {
+        text.replacingOccurrences(of: "|n", with: "\n")
+            .replacingOccurrences(of: "In-", with: "\n- ")
+            .replacingOccurrences(of: "nlf", with: "\n")
+            .replacingOccurrences(of: "In", with: "\n")
     }
 }

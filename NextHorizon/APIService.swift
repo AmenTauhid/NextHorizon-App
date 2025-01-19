@@ -40,16 +40,33 @@ extension String {
     }
 }
 
+actor TranslationState {
+    private var translatedMessages: [String: String] = [:]
+    
+    func getTranslation(for key: String) -> String? {
+        return translatedMessages[key]
+    }
+    
+    func setTranslation(_ translation: String, for key: String) {
+        translatedMessages[key] = translation
+    }
+    
+    func clearTranslations() {
+        translatedMessages.removeAll()
+    }
+}
+
 class APIService {
-    // Rest of the APIService implementation remains the same...
     private let baseURL = "http://127.0.0.1:8000"
     private let chatID = "user123"
+    private let translationState = TranslationState()
     
     enum APIError: Error {
         case invalidURL
         case noData
         case decodingError
         case networkError(Error)
+        case translationError(Error)
         
         var localizedDescription: String {
             switch self {
@@ -61,11 +78,13 @@ class APIService {
                 return "Error decoding server response"
             case .networkError(let error):
                 return "Network error: \(error.localizedDescription)"
+            case .translationError(let error):
+                return "Translation error: \(error.localizedDescription)"
             }
         }
     }
     
-    func sendMessageToFastAPI(message: String, completion: @escaping (Result<String, APIError>) -> Void) {
+    func sendMessageToFastAPI(message: String, translationManager: TranslationManager? = nil, completion: @escaping (Result<String, APIError>) -> Void) {
         guard let url = URL(string: "\(baseURL)/generate") else {
             completion(.failure(.invalidURL))
             return
@@ -86,7 +105,9 @@ class APIService {
         }
         request.httpBody = jsonData
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
             if let error = error {
                 completion(.failure(.networkError(error)))
                 return
@@ -97,12 +118,41 @@ class APIService {
                 return
             }
             
-            if let responseString = String(data: data, encoding: .utf8) {
-                let cleanedResponse = responseString.cleanFormattedResponse()
-                completion(.success(cleanedResponse))
-            } else {
+            guard let responseString = String(data: data, encoding: .utf8) else {
                 completion(.failure(.decodingError))
+                return
+            }
+            
+            let cleanedResponse = responseString.cleanFormattedResponse()
+            
+            // If no translation manager is provided or the current language is English,
+            // return the cleaned response directly
+            guard let translationManager = translationManager,
+                  translationManager.currentLanguage != "en" else {
+                completion(.success(cleanedResponse))
+                return
+            }
+            
+            // Translate the response
+            Task {
+                do {
+                    let translatedResponse = await translationManager.translate(cleanedResponse)
+                    await self.translationState.setTranslation(translatedResponse, for: cleanedResponse)
+                    DispatchQueue.main.async {
+                        completion(.success(translatedResponse))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(.failure(.translationError(error)))
+                    }
+                }
             }
         }.resume()
+    }
+    
+    func clearTranslations() {
+        Task {
+            await translationState.clearTranslations()
+        }
     }
 }
