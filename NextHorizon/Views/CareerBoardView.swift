@@ -121,7 +121,7 @@ struct MessageView: View {
                 ScrollView {
                     Text(formattedText)
                         .padding()
-                        .background(Color.gray.opacity(0.2))
+                        .background(Color.gray.opacity(0.4))
                         .cornerRadius(15)
                 }
                 Spacer()

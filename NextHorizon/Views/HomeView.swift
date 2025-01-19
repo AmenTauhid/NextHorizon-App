@@ -3,46 +3,176 @@
 //  NextHorizon
 //
 
-import Foundation
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject private var translationManager: TranslationManager
-    @State private var translatedTitle: String = "Home"
-    
+    // Hardcoded data for demonstration purposes
+    private let userName = "Omar"
+    private let currentSchooling = "High School Junior"
+    private let recommendedJobs = [
+        "Software Developer",
+        "Data Analyst",
+        "Graphic Designer"
+    ]
+    private let jobDescriptions: [String: String] = [
+        "Software Developer": "Build and maintain software applications.",
+        "Data Analyst": "Analyze data to uncover insights.",
+        "Graphic Designer": "Create visual content for various media."
+    ]
+    private let jobPaths: [String: String] = [
+        "Software Developer": "Bachelor's in Computer Science or Coding Bootcamp",
+        "Data Analyst": "Bachelor's in Statistics or Data Science Certification",
+        "Graphic Designer": "Associate's Degree or Portfolio with Certifications"
+    ]
+
+    @State private var selectedJob: String? = nil
+
     var body: some View {
         NavigationView {
             ZStack {
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.blue, Color.white]),
+                    gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.white]),
                     startPoint: .top,
                     endPoint: .bottom
                 )
-                    .edgesIgnoringSafeArea(.all)
-                VStack {
-                    TranslatableText(text: "Welcome to NextHorizon")
-                        .font(.title)
-                        .padding()
-                    
-                    TranslatableText(text: "Your academic assistant for a better learning experience")
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
-                .navigationBarTitle(translatedTitle)
-                .onAppear {
-                    translateNavigationTitle()
-                }
-                .onChange(of: translationManager.currentLanguage) { _ in
-                    translateNavigationTitle()
+                .edgesIgnoringSafeArea(.all)
+
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        // Welcome Section
+                        Text("Welcome back, \(userName)!")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .padding(.top, 20)
+
+                        Text("Discover your future career and how to get there.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+
+                        Divider()
+
+                        // Recommended Careers Section
+                        Text("Recommended Careers")
+                            .font(.headline)
+
+                        HStack(spacing: 15) {
+                            ForEach(recommendedJobs, id: \.self) { job in
+                                VStack {
+                                    Text(job)
+                                        .font(.system(size: 16, weight: .bold))
+                                    Text(jobDescriptions[job] ?? "Description not available")
+                                        .font(.footnote)
+                                        .foregroundColor(.gray)
+                                }
+                                .padding()
+                                .background(selectedJob == job ? Color.blue.opacity(0.3) : Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 2)
+                                .onTapGesture {
+                                    selectedJob = job
+                                }
+                            }
+                        }
+
+                        Divider()
+
+                        // Current Schooling Section
+                        Text("Current Schooling")
+                            .font(.headline)
+
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("You are currently enrolled as:")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            Text(currentSchooling)
+                                .font(.system(size: 16))
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 2)
+                        }
+
+                        Divider()
+
+                        // Schooling Section
+                        Text("Schooling")
+                            .font(.headline)
+
+                        if let selectedJob = selectedJob {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Based on your selection, here's the recommended schooling for \(selectedJob):")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+
+                                Text(jobPaths[selectedJob] ?? "Path not available")
+                                    .font(.system(size: 16))
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 2)
+
+                                Button(action: {
+                                    // Action to show schools offering the program
+                                    print("Show schools for \(selectedJob)")
+                                }) {
+                                    Text("See Schools Offering This Program")
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .cornerRadius(10)
+                                }
+                            }
+                        } else {
+                            Text("Please select a career to see recommended schooling.")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+
+                        Divider()
+
+                        // Features Section
+                        Text("App Features")
+                            .font(.headline)
+
+                        VStack(alignment: .leading, spacing: 10) {
+                            FeatureRow(icon: "graduationcap.fill", title: "Explore Career Paths", description: "Discover what steps are needed to reach your desired job.")
+                            FeatureRow(icon: "list.bullet", title: "Job Listings", description: "See real-world job postings related to your goals.")
+                            FeatureRow(icon: "person.fill.checkmark", title: "Personalized Recommendations", description: "Get tailored advice based on your interests and skills.")
+                        }
+                    }
+                    .padding()
                 }
             }
+            .navigationBarTitle("NextHorizon", displayMode: .inline)
         }
-        .translatePage()
     }
-    
-    private func translateNavigationTitle() {
-        Task {
-            translatedTitle = await translationManager.translate("Home")
+}
+
+struct FeatureRow: View {
+    let icon: String
+    let title: String
+    let description: String
+
+    var body: some View {
+        HStack(alignment: .top) {
+            Image(systemName: icon)
+                .resizable()
+                .frame(width: 30, height: 30)
+                .foregroundColor(.blue)
+                .padding(.trailing, 10)
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text(title)
+                    .font(.headline)
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 2)
     }
 }
