@@ -9,7 +9,8 @@ import SwiftUI
 struct JobBoardView: View {
     @EnvironmentObject private var translationManager: TranslationManager
     @State private var translatedTitle: String = "Job Board"
-    
+    @StateObject private var apiService = APIService()
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -24,9 +25,22 @@ struct JobBoardView: View {
                         .font(.title)
                         .padding()
                     
-                    TranslatableText(text: "Coming soon: Student job listings and internships")
-                        .multilineTextAlignment(.center)
-                        .padding()
+                    //                    TranslatableText(text: "Coming soon: Student job listings and internships")
+                    //                        .multilineTextAlignment(.center)
+                    //                        .padding()
+                    
+                    List(apiService.jobs) { job in
+                        NavigationLink(destination: JobDetail(job: job)) {
+                            VStack(alignment: .leading) {
+                                Text(job.job_title ?? "Unknown Job Title").font(.headline)
+                                Text(job.company ?? "Unknown Company").font(.subheadline)
+                            }
+                        }
+                    }
+                    .navigationTitle("Job Listings")
+                    .task {
+                        await apiService.fetchData()
+                    }
                 }
                 .navigationBarTitle(translatedTitle)
                 .onAppear {

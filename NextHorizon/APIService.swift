@@ -56,7 +56,12 @@ actor TranslationState {
     }
 }
 
-class APIService {
+struct SearchResults: Decodable {
+    let data: [Job]
+}
+
+class APIService: ObservableObject {
+    @Published var jobs: [Job] = []
     private let baseURL = "http://127.0.0.1:8000"
     private let chatID = "user123"
     private let translationState = TranslationState()
@@ -149,6 +154,36 @@ class APIService {
             }
         }.resume()
     }
+    
+    func fetchData() async {
+            guard let url = URL(string: "http://127.0.0.1:8000/jobs/search") else {
+                print("Invalid URL")
+                return
+            }
+            
+            do {
+                let (data, response) = try await URLSession.shared.data(from: url)
+                
+                // Log the HTTP response status code
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("HTTP Status Code: \(httpResponse.statusCode)")
+                }
+                
+                print("Raw JSON Data: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
+                
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let json = try? decoder.decode(SearchResults.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.jobs = json.data
+                    }
+                } else {
+                    print("Error: Unable to decode JSON")
+                }
+            } catch {
+                print("Error fetching or decoding data: \(error)")
+            }
+        }
     
     func clearTranslations() {
         Task {
