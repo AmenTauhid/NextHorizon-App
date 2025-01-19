@@ -1,3 +1,8 @@
+//
+//  ContentView.swift
+//  NextHorizon
+//
+
 import SwiftUI
 import Auth0
 
@@ -6,67 +11,66 @@ struct ContentView: View {
     @State private var showError = false
     @State private var errorMessage = ""
     @State private var selectedTab = 0
-    @EnvironmentObject private var translationManager: TranslationManager
-    @State private var translatedErrorTitle: String = "Error"
-    @State private var translatedOK: String = "OK"
     
     var body: some View {
         ZStack {
+            
             if let user = user {
-                TabView(selection: $selectedTab) {
-                    HomeView()
-                        .tabItem {
-                            Image(systemName: "house.fill")
-                            TranslatableText(text: "My Path")
+                NavigationView {
+                    VStack(spacing: 0) {
+                        Group {
+                            if selectedTab == 0 {
+                                HomeView()
+                            } else if selectedTab == 1 {
+                                JobBoardView()
+                            } else if selectedTab == 2 {
+                                CareerBoardView()
+                            } else if selectedTab == 3 {
+                                AccountView(user: user, logout: logout)
+                            }
                         }
-                        .tag(0)
-                    
-                    JobBoardView()
-                        .tabItem {
-                            Image(systemName: "doc.text.magnifyingglass")
-                            TranslatableText(text: "Job Search")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        
+                        HStack {
+                            navBarItem(icon: "house.fill", tag: 0)
+                            navBarItem(icon: "doc.text.magnifyingglass", tag: 1)
+                            navBarItem(icon: "briefcase.fill", tag: 2)
+                            navBarItem(icon: "person.fill", tag: 3)
                         }
-                        .tag(1)
-                    
-                    CareerBoardView()
-                        .tabItem {
-                            Image(systemName: "briefcase.fill")
-                            TranslatableText(text: "Career Explorer")
-                        }
-                        .tag(2)
-                    
-                    AccountView(user: user, logout: logout)
-                        .tabItem {
-                            Image(systemName: "person.fill")
-                            TranslatableText(text: "Account")
-                        }
-                        .tag(3)
+                        .padding()
+                        .background(
+                            Color(hex: "083221")
+                                .cornerRadius(25)
+                        )
+                        .foregroundColor(.white)
+                    }
+                    .navigationBarHidden(true)
                 }
-                .accentColor(.blue)
             } else {
                 LandingView(login: login)
             }
         }
         .alert(isPresented: $showError) {
             Alert(
-                title: Text(translatedErrorTitle),
+                title: Text("Error"),
                 message: Text(errorMessage),
-                dismissButton: .default(Text(translatedOK))
+                dismissButton: .default(Text("OK"))
             )
-        }
-        .onAppear {
-            translateAlertTexts()
-        }
-        .onChange(of: translationManager.currentLanguage) { _ in
-            translateAlertTexts()
         }
     }
     
-    private func translateAlertTexts() {
-        Task {
-            translatedErrorTitle = await translationManager.translate("Error")
-            translatedOK = await translationManager.translate("OK")
-        }
+    private func navBarItem(icon: String, tag: Int) -> some View {
+        Image(systemName: icon)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 40, height: 40)
+            .padding()
+            .foregroundColor(selectedTab == tag ? .white : .gray)
+            .font(selectedTab == tag ? .system(size: 40, weight: .bold) : .system(size: 40))
+            .onTapGesture {
+                selectedTab = tag
+            }
+            .frame(maxWidth: .infinity)
     }
     
     private func login() {

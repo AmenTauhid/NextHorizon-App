@@ -2,8 +2,6 @@
 //  LandingView.swift
 //  NextHorizon
 //
-//  Created by Elias Alissandratos on 2025-01-18.
-//
 
 import SwiftUI
 

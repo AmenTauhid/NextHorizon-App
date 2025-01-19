@@ -2,8 +2,6 @@
 //  HomeView.swift
 //  NextHorizon
 //
-//  Created by Omar Al dulaimi on 2025-01-18.
-//
 
 import Foundation
 import SwiftUI
@@ -14,21 +12,29 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                TranslatableText(text: "Welcome to NextHorizon")
-                    .font(.title)
-                    .padding()
-                
-                TranslatableText(text: "Your academic assistant for a better learning experience")
-                    .multilineTextAlignment(.center)
-                    .padding()
-            }
-            .navigationBarTitle(translatedTitle, displayMode: .inline)
-            .onAppear {
-                translateNavigationTitle()
-            }
-            .onChange(of: translationManager.currentLanguage) { _ in
-                translateNavigationTitle()
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.blue, Color.white]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    TranslatableText(text: "Welcome to NextHorizon")
+                        .font(.title)
+                        .padding()
+                    
+                    TranslatableText(text: "Your academic assistant for a better learning experience")
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+                .navigationBarTitle(translatedTitle)
+                .onAppear {
+                    translateNavigationTitle()
+                }
+                .onChange(of: translationManager.currentLanguage) { _ in
+                    translateNavigationTitle()
+                }
             }
         }
         .translatePage()
