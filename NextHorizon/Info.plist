@@ -2,26 +2,41 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>auth0.dwLcqmfmlbzYplK9SkqyyFZYsWg5RGSd</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>OmarA.sheridan.NextHorizon</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>nexthorizon</string>
-			</array>
-		</dict>
-	</array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>es</string>
+        <string>fr</string>
+        <string>ar</string>
+        <string>zh</string>
+    </array>
+
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>auth0.dwLcqmfmlbzYplK9SkqyyFZYsWg5RGSd</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>OmarA.sheridan.NextHorizon</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>nexthorizon</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

@@ -7,19 +7,36 @@
 
 import Foundation
 import SwiftUI
+
 struct JobBoardView: View {
+    @EnvironmentObject private var translationManager: TranslationManager
+    @State private var translatedTitle: String = "Job Board"
+    
     var body: some View {
         NavigationView {
             VStack {
-                Text("Find Your Next Opportunity")
+                TranslatableText(text: "Find Your Next Opportunity")
                     .font(.title)
                     .padding()
                 
-                Text("Coming soon: Student job listings and internships")
+                TranslatableText(text: "Coming soon: Student job listings and internships")
                     .multilineTextAlignment(.center)
                     .padding()
             }
-            .navigationBarTitle("Job Board", displayMode: .inline)
+            .navigationBarTitle(translatedTitle, displayMode: .inline)
+            .onAppear {
+                translateNavigationTitle()
+            }
+            .onChange(of: translationManager.currentLanguage) { _ in
+                translateNavigationTitle()
+            }
+        }
+        .translatePage()
+    }
+    
+    private func translateNavigationTitle() {
+        Task {
+            translatedTitle = await translationManager.translate("Job Board")
         }
     }
 }

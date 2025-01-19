@@ -7,19 +7,36 @@
 
 import Foundation
 import SwiftUI
+
 struct HomeView: View {
+    @EnvironmentObject private var translationManager: TranslationManager
+    @State private var translatedTitle: String = "Home"
+    
     var body: some View {
         NavigationView {
             VStack {
-                Text("Welcome to NextHorizon")
+                TranslatableText(text: "Welcome to NextHorizon")
                     .font(.title)
                     .padding()
                 
-                Text("Your academic assistant for a better learning experience")
+                TranslatableText(text: "Your academic assistant for a better learning experience")
                     .multilineTextAlignment(.center)
                     .padding()
             }
-            .navigationBarTitle("Home", displayMode: .inline)
+            .navigationBarTitle(translatedTitle, displayMode: .inline)
+            .onAppear {
+                translateNavigationTitle()
+            }
+            .onChange(of: translationManager.currentLanguage) { _ in
+                translateNavigationTitle()
+            }
+        }
+        .translatePage()
+    }
+    
+    private func translateNavigationTitle() {
+        Task {
+            translatedTitle = await translationManager.translate("Home")
         }
     }
 }

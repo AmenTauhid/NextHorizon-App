@@ -7,12 +7,13 @@
 
 import Foundation
 import SwiftUI
-// AccountView.swift
-import SwiftUI
+
 
 struct AccountView: View {
     let user: User
     let logout: () -> Void
+    @EnvironmentObject private var translationManager: TranslationManager
+    @State private var translatedTitle: String = "Account"
     
     var body: some View {
         NavigationView {
@@ -41,13 +42,38 @@ struct AccountView: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
+                // Language Selection
+                VStack(alignment: .leading, spacing: 10) {
+                    TranslatableText(text: "Preferred Language")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    if !translationManager.availableLanguages.isEmpty {
+                        Picker("Select Language", selection: $translationManager.currentLanguage) {
+                            ForEach(translationManager.availableLanguages) { language in
+                                Text(language.name)
+                                    .tag(language.language)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .padding()
+                    } else {
+                        ProgressView()
+                            .padding()
+                    }
+                }
+                .padding(.vertical)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(10)
+                .padding(.horizontal)
+                
                 Spacer()
                 
                 // Logout Button
                 Button(action: logout) {
                     HStack {
                         Image(systemName: "arrow.right.circle.fill")
-                        Text("Sign Out")
+                        TranslatableText(text: "Sign Out")
                     }
                     .frame(minWidth: 200)
                     .padding()
@@ -57,10 +83,24 @@ struct AccountView: View {
                 }
                 .padding(.bottom, 30)
             }
-            .navigationBarTitle("Account", displayMode: .inline)
+            .navigationBarTitle(translatedTitle, displayMode: .inline)
+            .onAppear {
+                translateNavigationTitle()
+            }
+            .onChange(of: translationManager.currentLanguage) { _ in
+                translateNavigationTitle()
+            }
+        }
+        .translatePage()
+    }
+    
+    private func translateNavigationTitle() {
+        Task {
+            translatedTitle = await translationManager.translate("Account")
         }
     }
 }
+
 
 struct InfoRow: View {
     let icon: String
@@ -71,7 +111,7 @@ struct InfoRow: View {
             Image(systemName: icon)
                 .foregroundColor(.blue)
                 .frame(width: 30)
-            Text(text)
+            TranslatableText(text: text)
             Spacer()
         }
     }

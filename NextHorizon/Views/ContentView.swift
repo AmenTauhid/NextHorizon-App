@@ -9,57 +9,73 @@
 import SwiftUI
 import Auth0
 
+
+
 struct ContentView: View {
     @State private var user: User?
     @State private var showError = false
     @State private var errorMessage = ""
     @State private var selectedTab = 0
+    @EnvironmentObject private var translationManager: TranslationManager
+    @State private var translatedErrorTitle: String = "Error"
+    @State private var translatedOK: String = "OK"
     
     var body: some View {
         ZStack {
             if let user = user {
-                // Main app interface with TabView
                 TabView(selection: $selectedTab) {
                     HomeView()
                         .tabItem {
                             Image(systemName: "house.fill")
-                            Text("Home")
+                            TranslatableText(text: "Home")
                         }
                         .tag(0)
                     
                     JobBoardView()
                         .tabItem {
                             Image(systemName: "briefcase.fill")
-                            Text("Jobs")
+                            TranslatableText(text: "Jobs")
                         }
                         .tag(1)
                     
                     CareerBoardView()
                         .tabItem {
                             Image(systemName: "ladder")
-                            Text("Career")
+                            TranslatableText(text: "Career")
                         }
                         .tag(2)
                     
                     AccountView(user: user, logout: logout)
                         .tabItem {
                             Image(systemName: "person.fill")
-                            Text("Account")
+                            TranslatableText(text: "Account")
                         }
                         .tag(3)
                 }
                 .accentColor(.blue)
             } else {
-                // Login view
                 LoginView(login: login)
             }
         }
         .alert(isPresented: $showError) {
             Alert(
-                title: Text("Error"),
+                title: Text(translatedErrorTitle),
                 message: Text(errorMessage),
-                dismissButton: .default(Text("OK"))
+                dismissButton: .default(Text(translatedOK))
             )
+        }
+        .onAppear {
+            translateAlertTexts()
+        }
+        .onChange(of: translationManager.currentLanguage) { _ in
+            translateAlertTexts()
+        }
+    }
+    
+    private func translateAlertTexts() {
+        Task {
+            translatedErrorTitle = await translationManager.translate("Error")
+            translatedOK = await translationManager.translate("OK")
         }
     }
     

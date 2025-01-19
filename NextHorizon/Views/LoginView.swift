@@ -7,7 +7,9 @@
 
 import Foundation
 import SwiftUI
+
 struct LoginView: View {
+    @EnvironmentObject private var translationManager: TranslationManager
     let login: () -> Void
     
     var body: some View {
@@ -17,11 +19,11 @@ struct LoginView: View {
                 .foregroundColor(.blue)
                 .padding(.bottom, 40)
             
-            Text("NextHorizon")
+            TranslatableText(text: "NextHorizon")
                 .font(.largeTitle)
                 .bold()
             
-            Text("Your Academic Journey Starts Here")
+            TranslatableText(text: "Your Academic Journey Starts Here")
                 .font(.subheadline)
                 .foregroundColor(.gray)
                 .padding(.bottom, 40)
@@ -29,7 +31,7 @@ struct LoginView: View {
             Button(action: login) {
                 HStack {
                     Image(systemName: "arrow.right.circle.fill")
-                    Text("Sign In")
+                    TranslatableText(text: "Sign In")
                 }
                 .frame(minWidth: 200)
                 .padding()
@@ -39,5 +41,7 @@ struct LoginView: View {
             }
         }
         .padding()
+        .translatePage()
     }
 }
+
