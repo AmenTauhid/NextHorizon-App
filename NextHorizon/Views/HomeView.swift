@@ -115,12 +115,15 @@ struct HomeView: View {
                                     // Action to show schools offering the program
                                     print("Show schools for \(selectedJob)")
                                 }) {
-                                    Text("See Schools Offering This Program")
-                                        .font(.subheadline)
-                                        .foregroundColor(.white)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .cornerRadius(10)
+                                    HStack{
+                                        Image(systemName: "safari")
+                                        Text("See Schools Offering This Program")
+                                    }
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .cornerRadius(10)
                                 }
                             }
                         } else {
@@ -136,15 +139,14 @@ struct HomeView: View {
                             .font(.headline)
 
                         VStack(alignment: .leading, spacing: 10) {
-                            FeatureRow(icon: "graduationcap.fill", title: "Explore Career Paths", description: "Discover what steps are needed to reach your desired job.")
-                            FeatureRow(icon: "list.bullet", title: "Job Listings", description: "See real-world job postings related to your goals.")
-                            FeatureRow(icon: "person.fill.checkmark", title: "Personalized Recommendations", description: "Get tailored advice based on your interests and skills.")
+                            FeatureRow(icon: "house.fill", title: "Homepage", description: "Access all your career and schooling information at a glance. Get personalized schooling recommendations based on your chosen career path.")
+                            FeatureRow(icon: "message.fill", title: "Career Advisor", description: "Chat with our bot to learn about and explore career options, understand your interests, and plan your future.")
+                            FeatureRow(icon: "briefcase.fill", title: "Job Board", description: "Find the most recent and relevant job postings tailored to your preferences, including details about salary, location, and required qualifications.")
                         }
                     }
                     .padding()
                 }
             }
-            .navigationBarTitle("NextHorizon", displayMode: .inline)
         }
     }
 }

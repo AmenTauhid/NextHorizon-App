@@ -33,8 +33,8 @@ struct ContentView: View {
                         
                         HStack {
                             navBarItem(icon: "house.fill", tag: 0)
-                            navBarItem(icon: "briefcase.fill", tag: 2)
-                            navBarItem(icon: "doc.text.magnifyingglass", tag: 1)
+                            navBarItem(icon: "message.fill", tag: 2)
+                            navBarItem(icon: "briefcase.fill", tag: 1)
                             navBarItem(icon: "person.fill", tag: 3)
                         }
                         .padding()
