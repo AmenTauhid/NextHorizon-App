@@ -89,13 +89,16 @@ class ChatViewModel: ObservableObject {
         let userMessage = Message(text: newMessageText, isUser: true)
         messages.append(userMessage)
         newMessageText = ""
-        apiService.sendMessageToFastAPI(message: userMessage.text) { response, error in
-            if let response = response {
-                DispatchQueue.main.async {
+        
+        apiService.sendMessageToFastAPI(message: userMessage.text) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
                     self.messages.append(Message(text: response, isUser: false))
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                    
                 }
-            } else if let error = error {
-                print("Error: \(error)")
             }
         }
     }
